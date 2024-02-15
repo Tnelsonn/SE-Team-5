@@ -1,12 +1,7 @@
-from dotenv import load_dotenv
-load_dotenv()
-
-import os
-
 from supabase import create_client
 
-url = os.environ.get("SUPABASE_URL")
-key = os.environ.get("SUPABASE_KEY")
+url = "https://guhvlazcvazrraehvymx.supabase.co"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1aHZsYXpjdmF6cnJhZWh2eW14Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwNzI2NDExMiwiZXhwIjoyMDIyODQwMTEyfQ.s9ATaSWw1M5xszV-TBXW0H8wjf-xg089FGf90YKbwws"
 
 #instantiates supabase client
 supabase = create_client(url, key)
@@ -26,17 +21,17 @@ def player_exists(id):
 
 #insert data player
 #requires id #, first name, last name, codename 
-def insert_player(id, fn, ln, cn):
+def insert_player(id, cn):
     if player_exists(id):
         print("Cannot insert player, id is already being used.\n")
     else:
-        supabase.table("player").insert({"id": id, "first_name": fn, "last_name": ln, "codename": cn}).execute()
+        supabase.table("player").insert({"id": id, "codename": cn}).execute()
 
 
 #updates a player
-def update_player(id, fn, ln, cn):
+def update_player(id, cn):
     if player_exists(id):
-        supabase.table("player").update({"first_name": fn, "last_name": ln, "codename": cn}).eq("id", id).execute()
+        supabase.table("player").update({"codename": cn}).eq("id", id).execute()
     else:  
         print("Cannot update player that does not exist.\n")
 
@@ -60,19 +55,19 @@ def clear_table():
 # print('\n\n')
 
 # for id in range(10):
-#     insert_player(id, "Ethan", "Smith", "plswork")
+#     insert_player(id, "plswork")
 #     print(read_table())
 #     print('\n\n')
 
-# update_player(2, "Smith", "Ethan", "update")
+# update_player(2, "update")
 # print(read_table())
 # print('\n\n')
 
-# insert_player(3, "Ethan", "Smith", "plswork")
+# insert_player(3, "plswork")
 # print(read_table())
 # print('\n\n')
 
-# update_player(3, "Smith", "Ethan", "update")
+# update_player(3, "update")
 # print(read_table())
 # print('\n\n')
 
