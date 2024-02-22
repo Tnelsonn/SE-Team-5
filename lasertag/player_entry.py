@@ -1,6 +1,7 @@
 import os
 import time
 import tkinter as tk
+import database
 
 def submit():
     all_teams_contents = []
@@ -13,7 +14,12 @@ def submit():
                 row.append(cell_value)
             team_contents.append(row)
         all_teams_contents.append(team_contents)
-    print(all_teams_contents)
+    for team_contents, team_name in zip(all_teams_contents, ['Team 1', 'Team 2']):
+        for player_info in team_contents:
+            player_id, player_codename = player_info
+            if player_id.strip() and player_codename.strip():
+                database.insert_player(player_id, player_codename)
+            
 
 p_entry = tk.Tk()
 p_entry.title("Player Entry")
@@ -24,11 +30,17 @@ y = (p_entry.winfo_screenheight()//2)-(height//2)
 p_entry.geometry('{}x{}+{}+{}'.format(width,height,x,y))
 p_entry.configure(background = 'black')
 # Create frames for each team with green and red backgrounds
-tf1 = tk.Frame(p_entry, bg="green", padx=5, pady=5)
-tf1.pack(side=tk.LEFT, padx=230, pady=5)
-tf2 = tk.Frame(p_entry, bg="red", padx=5, pady=5)
-tf2.pack(side=tk.LEFT, padx=30, pady=5)
 
+container_frame = tk.Frame(p_entry, bg="black")
+container_frame.pack(expand=True, fill="both")
+
+
+tf1 = tk.Frame(container_frame, bg="green", padx=5, pady=5)
+tf1.pack(side=tk.LEFT, padx=50, pady=5)
+tf2 = tk.Frame(container_frame, bg="red", padx=5, pady=5)
+tf2.pack(side=tk.LEFT, padx=50, pady=5)
+
+container_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 # Create lists to hold all Entry widgets for both teams
 list_team1 = []
 list_team2 = []
@@ -51,6 +63,6 @@ for team_entry_list, team_frame in [(list_team1, tf1), (list_team2, tf2)]:
 
 # Create a Submit button
 submit_button = tk.Button(p_entry, text="Submit", command=submit)
-submit_button.place(x = 585, y = 670, width = 100)
+submit_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 30)
 
 p_entry.mainloop()

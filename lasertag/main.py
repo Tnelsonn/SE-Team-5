@@ -2,6 +2,7 @@
 # PIL was needed to implement the image into the window
 import os
 import time
+
 from tkinter import * 
 from PIL import Image, ImageTk
 from tkinter.ttk import Progressbar
