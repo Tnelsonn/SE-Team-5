@@ -2,6 +2,7 @@ import os
 import time
 import tkinter as tk
 import database
+from database import clear_table
 
 def submit():
     all_teams_contents = []
@@ -19,7 +20,14 @@ def submit():
             player_id, player_codename = player_info
             if player_id.strip() and player_codename.strip():
                 database.insert_player(player_id, player_codename)
-            
+
+#clear entries and database       
+def clear_entries():
+    for entry_list in [list_team1, list_team2]:
+        for entry_row in entry_list:
+            for entry in entry_row:
+                entry.delete(0, tk.END)
+    clear_table()
 
 p_entry = tk.Tk()
 p_entry.title("Player Entry")
@@ -64,5 +72,9 @@ for team_entry_list, team_frame in [(list_team1, tf1), (list_team2, tf2)]:
 # Create a Submit button
 submit_button = tk.Button(p_entry, text="Submit", command=submit)
 submit_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 30)
+
+#create a clear entries button
+clear_button = tk.Button(p_entry, text="Clear", command=clear_entries)
+clear_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 0)
 
 p_entry.mainloop()
