@@ -5,6 +5,9 @@ import udp_sockets
 import database
 from database import clear_table
 
+#get socket information
+sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
+
 def submit():
     all_teams_contents = []
     for team_entry_list in [list_team1, list_team2]:
@@ -22,6 +25,7 @@ def submit():
             player_id, player_codename = player_info
             if player_id.strip() and player_codename.strip():
                 database.insert_player(player_id, player_codename)
+                udp_sockets.transmit_data(sock_send, server_address_send, player_id)
 
 #clear entries and database       
 def clear_entries():
