@@ -2,8 +2,9 @@
 # PIL was needed to implement the image into the window
 import os
 import time
+
 from tkinter import * 
-from PIL import ImageTk, Image
+from PIL import Image, ImageTk
 from tkinter.ttk import Progressbar
 import udp_sockets
 import threading
@@ -19,7 +20,7 @@ socket_thread.start()
 splash = Tk(className='Loading')
 
 #image_logo -> open the image then resize it using the given resolution of the window
-image_logo = Image.open('images/logo.jpg')
+image_logo = Image.open("images//logo.jpg")
 height = 720
 width = 1280
 image_logo = image_logo.resize((width,height),Image.LANCZOS)

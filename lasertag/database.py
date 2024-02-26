@@ -23,7 +23,7 @@ def player_exists(id):
 #requires id #, first name, last name, codename 
 def insert_player(id, cn):
     if player_exists(id):
-        print("Cannot insert player, id is already being used.\n")
+        update_player(id, cn)
     else:
         supabase.table("player").insert({"id": id, "codename": cn}).execute()
 
