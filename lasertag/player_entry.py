@@ -1,6 +1,7 @@
 import os
 import time
 import tkinter as tk
+import udp_sockets
 import database
 from database import clear_table
 
@@ -15,6 +16,7 @@ def submit():
                 row.append(cell_value)
             team_contents.append(row)
         all_teams_contents.append(team_contents)
+        
     for team_contents, team_name in zip(all_teams_contents, ['Team 1', 'Team 2']):
         for player_info in team_contents:
             player_id, player_codename = player_info
