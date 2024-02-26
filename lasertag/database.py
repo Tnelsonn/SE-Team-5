@@ -26,7 +26,7 @@ def insert_player(id, cn):
         update_player(id, cn)
     else:
         supabase.table("player").insert({"id": id, "codename": cn}).execute()
-
+        
 
 #updates a player
 def update_player(id, cn):

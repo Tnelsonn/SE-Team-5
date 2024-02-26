@@ -10,7 +10,8 @@ import udp_sockets
 import threading
 
 #create sockets
-udp_sockets.create_sockets()
+sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
+udp_sockets.bind_sockets()
 
 #create thread for receiving statuses
 socket_thread = threading.Thread(target=udp_sockets.receive_data)
@@ -43,7 +44,7 @@ def fillbar(currentprog=0):
         splash.withdraw()
         os.system("python3 player_entry.py")
         splash.destroy()
-        udp_sockets.game_start()
+        udp_sockets.game_start(sock_send, server_address_send)
 
 
 
