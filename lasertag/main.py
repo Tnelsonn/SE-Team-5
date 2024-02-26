@@ -5,7 +5,15 @@ import time
 from tkinter import * 
 from PIL import ImageTk, Image
 from tkinter.ttk import Progressbar
-# import udp_sockets
+import udp_sockets
+import threading
+
+#create sockets
+udp_sockets.create_sockets()
+
+#create thread for receiving statuses
+socket_thread = threading.Thread(target=udp_sockets.receive_data)
+socket_thread.start()
 
 # creating an instance of a TK object named splash for the first display case
 splash = Tk(className='Loading')
@@ -34,6 +42,7 @@ def fillbar(currentprog=0):
         splash.withdraw()
         os.system("python3 player_entry.py")
         splash.destroy()
+        udp_sockets.game_start()
 
 
 
@@ -41,8 +50,6 @@ prog = Label(splash, text="Loading...", font = ('Arial',13,'bold'),fg = '#14183e
 prog.place(x=100,y=670)
 progbar = Progressbar(splash,orient=HORIZONTAL,length=1080,mode='determinate')
 progbar.place(x=100,y=700)
-
-udp_sockets.game_start()
 
 fillbar()
 

@@ -1,6 +1,7 @@
 import os
 import time
 import tkinter as tk
+import udp_sockets
 
 def submit():
     all_teams_contents = []
@@ -14,6 +15,7 @@ def submit():
             team_contents.append(row)
         all_teams_contents.append(team_contents)
     print(all_teams_contents)
+    #udp_sockets.game_start()
 
 p_entry = tk.Tk()
 p_entry.title("Player Entry")
