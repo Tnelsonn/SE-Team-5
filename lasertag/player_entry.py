@@ -22,12 +22,14 @@ def submit():
                 database.insert_player(player_id, player_codename)
 
 #clear entries and database       
-def clear_entries():
+def clear_entries(event=None):
     for entry_list in [list_team1, list_team2]:
         for entry_row in entry_list:
             for entry in entry_row:
                 entry.delete(0, tk.END)
     clear_table()
+
+
 
 p_entry = tk.Tk()
 p_entry.title("Player Entry")
@@ -74,7 +76,9 @@ submit_button = tk.Button(p_entry, text="Submit", command=submit)
 submit_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 30)
 
 #create a clear entries button
-clear_button = tk.Button(p_entry, text="Clear", command=clear_entries)
+clear_button = tk.Button(p_entry, text="Clear\nF12", command=clear_entries)
 clear_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 0)
+p_entry.bind("<F12>", clear_entries)
+
 
 p_entry.mainloop()
