@@ -1,10 +1,12 @@
 import os
 import time
 import tkinter as tk
+from PIL import Image, ImageTk
 import udp_sockets
 import database
 from database import clear_table
 from game_action import create_game_screen
+from countdown import main
 
 #get socket information
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
@@ -93,12 +95,13 @@ for team_entry_list, team_frame in [(list_team1, tf1), (list_team2, tf2)]:
         team_entry_list.append(row_entries)
 
 
+
 def switch_to_game_screen(event=None):
-   # Close the player entry screen
     p_entry.destroy()
-    
-    # Call function to create game action screen
-    create_game_screen(green_team,red_team)
+    if __name__ == "__main__":
+        main()
+    create_game_screen(green_team, red_team)
+
 
 # Bind F5 key to switch to the game action screen
 p_entry.bind("<F5>", switch_to_game_screen)
