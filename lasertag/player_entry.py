@@ -102,18 +102,18 @@ def switch_to_game_screen(event=None):
         main()
     create_game_screen(green_team, red_team)
 
-
-# Bind F5 key to switch to the game action screen
+# create a button to start the game
+clear_button = tk.Button(p_entry, text="Start Game\nF5", command=switch_to_game_screen)
+clear_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 30)
 p_entry.bind("<F5>", switch_to_game_screen)
-
-# Create a Submit button
-submit_button = tk.Button(p_entry, text="Submit", command=submit)
-submit_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 30)
 
 #create a clear entries button
 clear_button = tk.Button(p_entry, text="Clear\nF12", command=clear_entries)
 clear_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 0)
 p_entry.bind("<F12>", clear_entries)
 
+# Create a Submit button
+submit_button = tk.Button(p_entry, text="Submit", command=submit)
+submit_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 30)
 
 p_entry.mainloop()
