@@ -21,17 +21,17 @@ def player_exists(id):
 
 #insert data player
 #requires id #, first name, last name, codename 
-def insert_player(id, cn):
+def insert_player(id, cn, hid):
     if player_exists(id):
-        update_player(id, cn)
+        update_player(id, cn, hid)
     else:
-        supabase.table("player").insert({"id": id, "codename": cn}).execute()
+        supabase.table("player").insert({"id": id, "codename": cn, "hardware_id": hid}).execute()
         
 
 #updates a player
-def update_player(id, cn):
+def update_player(id, cn, hid):
     if player_exists(id):
-        supabase.table("player").update({"codename": cn}).eq("id", id).execute()
+        supabase.table("player").update({"codename": cn, "hardware_id": hid}).eq("id", id).execute()
     else:  
         print("Cannot update player that does not exist.\n")
 
@@ -47,33 +47,3 @@ def clear_table():
     #loop through data
     for rows in all_rows:
         delete_player(rows['id'])
-
-
-#testing
-# clear_table()
-# print(read_table())
-# print('\n\n')
-
-# for id in range(10):
-#     insert_player(id, "plswork")
-#     print(read_table())
-#     print('\n\n')
-
-# update_player(2, "update")
-# print(read_table())
-# print('\n\n')
-
-# insert_player(3, "plswork")
-# print(read_table())
-# print('\n\n')
-
-# update_player(3, "update")
-# print(read_table())
-# print('\n\n')
-
-# delete_player(3)
-# print(read_table())
-    
-# clear_table()
-# print(read_table())
-

@@ -27,7 +27,7 @@ def submit():
         team_contents = []
         for i in range(20):
             row = []
-            for j in range(2):
+            for j in range(3):
                 cell_value = team_entry_list[i][j].get()
                 row.append(cell_value)
             team_contents.append(row)
@@ -35,13 +35,13 @@ def submit():
         
     for team_contents, team_name in zip(all_teams_contents, ['Team 1', 'Team 2']):
         for player_info in team_contents:
-            player_id, player_codename = player_info
+            player_id, player_codename, player_hid = player_info
             if player_id.strip() and player_codename.strip():
                 if int(player_id.strip())%2 == 1:
                     green_team.append(player_codename.strip())
                 else:
                     red_team.append(player_codename.strip())
-                database.insert_player(player_id, player_codename)
+                database.insert_player(player_id, player_codename,player_hid)
                 udp_sockets.transmit_data(sock_send, server_address_send, player_id)
         
 #clear entries and database       
@@ -81,14 +81,14 @@ list_team2 = []
 # Create labels for column headers
 for i, team_frame in enumerate([tf1, tf2]):
     tk.Label(team_frame, text=f"Team {i+1}", font=("Arial", 14, "bold")).grid(row=0, columnspan=2, pady=5)
-    for j, col in enumerate(["Id", "Code Name"]):
+    for j, col in enumerate(["Id", "Code Name", "Hardware ID"]):
         tk.Label(team_frame, text=col, font=("Arial", 10, "bold"),width = 10).grid(row=1, column=j, pady=5)
 
 # Create the tables of Entry widgets for both teams
 for team_entry_list, team_frame in [(list_team1, tf1), (list_team2, tf2)]:
     for i in range(20):
         row_entries = []
-        for j in range(2):
+        for j in range(3):
             entry = tk.Entry(team_frame)
             entry.grid(row=i+2, column=j, padx=5, pady=5)
             row_entries.append(entry)
