@@ -12,7 +12,15 @@ def read_table():
     return table.data #table.data is used to access list of player dictionaries
 
 #checks to see if player id is being used
-def player_exists(id):
+def player_exists(id, cn, hid):
+    existing_player = supabase.table("player").select("*").eq("id", id).eq("codename", cn).eq("hardware_id", hid).execute()
+    if existing_player.data: #returns false if there if data is empty
+        return True
+    else: 
+        return False
+
+#check to see if id is already being used
+def id_exists(id):
     existing_player = supabase.table("player").select("id").eq("id", id).execute()
     if existing_player.data: #returns false if there if data is empty
         return True
@@ -22,18 +30,16 @@ def player_exists(id):
 #insert data player
 #requires id #, first name, last name, codename 
 def insert_player(id, cn, hid):
-    if player_exists(id):
-        update_player(id, cn, hid)
+    if player_exists(id, cn, hid):
+        return
+    elif id_exists(id):
+        update_player(id,cn,hid)
     else:
         supabase.table("player").insert({"id": id, "codename": cn, "hardware_id": hid}).execute()
-        
 
 #updates a player
 def update_player(id, cn, hid):
-    if player_exists(id):
-        supabase.table("player").update({"codename": cn, "hardware_id": hid}).eq("id", id).execute()
-    else:  
-        print("Cannot update player that does not exist.\n")
+    supabase.table("player").update({"codename": cn, "hardware_id": hid}).eq("id", id).execute()
 
 #deletes player based on id
 def delete_player(id):

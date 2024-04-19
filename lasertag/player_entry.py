@@ -3,24 +3,83 @@ import time
 import tkinter as tk
 from PIL import Image, ImageTk
 import udp_sockets
-import database
-from database import clear_table
+import database as db
 from game_action import create_game_screen
 from countdown import main
 
 #get socket information
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
 
+
+#lists of player info for each team
 green_team = []
 red_team = []
 
+#lists of only codenames for each team
+green_team_cn = []
+red_team_cn = []
+
+
+def load_db():
+    #get all current rows in the db
+    players = db.read_table()
+
+    #check to see if db is empty
+    if not players:
+        return
+    
+    #sort players by team
+    for player in players:
+        player_hid =  player.get('hardware_id', '')
+        player_codename = player.get('codename', '')
+        if int(player_hid.strip())%2 == 1:
+            green_team.append(player)
+            green_team_cn.append(player_codename.strip())
+        else:
+            red_team.append(player)
+            red_team_cn.append(player_codename.strip())
+
+def fill_tables():
+    #load current db
+    load_db()    
+    
+    #insert green team data
+    for i, player_info in enumerate(green_team):
+        if i < len(list_team1):
+            entry_row = list_team1[i]
+            #populate the entry widgets with player information
+            for j, entry in enumerate(entry_row):
+                entry.delete(0, tk.END)
+                if j == 0:
+                    value = player_info.get('id', '') 
+                elif j == 1:
+                    value = player_info.get('codename', '')  
+                elif j == 2:
+                    value = player_info.get('hardware_id', '') 
+                entry.insert(tk.END, value)
+
+    #insert red team data
+    for i, player_info in enumerate(red_team):
+        if i < len(list_team2):
+            entry_row = list_team2[i]
+            #populate the entry widgets with player information
+            for j, entry in enumerate(entry_row):
+                entry.delete(0, tk.END)
+                if j == 0:
+                    value = player_info.get('id', '')
+                elif j == 1:
+                    value = player_info.get('codename', '')
+                elif j == 2:
+                    value = player_info.get('hardware_id', '')
+                entry.insert(tk.END, value)
+
 def submit():
 
-    global green_team, red_team  # Declare global lists to store player names
+    global green_team_cn, red_team_cn  # Declare global lists to store player names
     
     # Clear the existing player lists
-    green_team.clear()
-    red_team.clear()
+    green_team_cn.clear()
+    red_team_cn.clear()
 
     all_teams_contents = []
     for team_entry_list in [list_team1, list_team2]:
@@ -37,11 +96,11 @@ def submit():
         for player_info in team_contents:
             player_id, player_codename, player_hid = player_info
             if player_id.strip() and player_codename.strip():
-                if int(player_id.strip())%2 == 1:
-                    green_team.append(player_codename.strip())
+                if int(player_hid.strip())%2 == 1:
+                    green_team_cn.append(player_codename.strip())
                 else:
-                    red_team.append(player_codename.strip())
-                database.insert_player(player_id, player_codename,player_hid)
+                    red_team_cn.append(player_codename.strip())
+                db.insert_player(player_id, player_codename,player_hid) #this function will handle cases where player already exists
                 udp_sockets.transmit_data(sock_send, server_address_send, player_id)
         
 #clear entries and database       
@@ -50,9 +109,13 @@ def clear_entries(event=None):
         for entry_row in entry_list:
             for entry in entry_row:
                 entry.delete(0, tk.END)
-    clear_table()
+    db.clear_table()
 
-
+def switch_to_game_screen(event=None):
+    p_entry.destroy()
+    if __name__ == "__main__":
+        main()
+    create_game_screen(green_team_cn, red_team_cn)
 
 p_entry = tk.Tk()
 p_entry.title("Player Entry")
@@ -66,7 +129,6 @@ p_entry.configure(background = 'black')
 
 container_frame = tk.Frame(p_entry, bg="black")
 container_frame.pack(expand=True, fill="both")
-
 
 tf1 = tk.Frame(container_frame, bg="green", padx=5, pady=5)
 tf1.pack(side=tk.LEFT, padx=50, pady=5)
@@ -94,13 +156,8 @@ for team_entry_list, team_frame in [(list_team1, tf1), (list_team2, tf2)]:
             row_entries.append(entry)
         team_entry_list.append(row_entries)
 
-
-
-def switch_to_game_screen(event=None):
-    p_entry.destroy()
-    if __name__ == "__main__":
-        main()
-    create_game_screen(green_team, red_team)
+#populate the widgets with current db
+fill_tables()
 
 # create a button to start the game
 clear_button = tk.Button(p_entry, text="Start Game\nF5", command=switch_to_game_screen)
