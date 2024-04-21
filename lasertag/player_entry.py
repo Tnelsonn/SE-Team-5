@@ -114,7 +114,9 @@ def switch_to_game_screen(event=None):
     p_entry.destroy()
     if __name__ == "__main__":
         main()
+    udp_sockets.game_start(sock_send, server_address_send)
     create_game_screen(green_team_cn, red_team_cn)
+    
 
 p_entry = tk.Tk()
 p_entry.title("Player Entry")

@@ -37,9 +37,8 @@ def receive_data():
     # logic to decide what data to send
     # game start function to send '202'
 def game_start(socket, address):
-    for _ in range(3):
-        socket.sendto(b'202', address)
-        print('Game start')
+    socket.sendto(b'202', address)
+    print('Game start')
         
 
     # If the game ends, send '221' three times

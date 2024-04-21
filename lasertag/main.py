@@ -44,7 +44,7 @@ def fillbar(currentprog=0):
         splash.withdraw()
         os.system("python3 player_entry.py")
         splash.destroy()
-        udp_sockets.game_start(sock_send, server_address_send)
+        
 
 
 
