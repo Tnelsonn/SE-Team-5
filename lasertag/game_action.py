@@ -45,7 +45,7 @@ def create_game_screen(green_team,red_team):
 
     # Create frame for current game action
     current_action_frame = tk.Frame(game_screen, bg="black", bd=2, relief="ridge")
-    current_action_frame.place(x=10, y=height//2+50, width=width/2, height=150)
+    current_action_frame.place(x=240, y=height//2+50, width=800, height=250)
 
     # Add label for current game action
     tk.Label(current_action_frame, text="Current Game Action", bg="black", fg="blue").pack()
