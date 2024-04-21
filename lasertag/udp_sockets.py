@@ -24,14 +24,25 @@ def receive_data():
         # Receive data
         data, address = sock_receive.recvfrom(4096)
 
+        print('Received:', data.decode())
+
         # Process received data
-        # Data logic
-        # if data is '53', the red base has been scored
-        # If data is '43', the green base has been scored
-        if data == b'53':
-            print('Red base scored')
-        elif data == b'43':
-            print('Green base scored')
+        if b':' in data:
+            # Player hit another player
+            sender_id, hit_id = data.decode().split(':')
+            if hit_id == 53:
+                #Red base score
+                transmit_data(sock_send, server_address_send, 100)
+            elif hit_id == 43:
+                #Green base scored
+                transmit_data(sock_send, server_address_send, 100)
+            elif sender_id == hit_id:
+                # Player tagged themselves, transmit their own equipment ID
+                transmit_data(sock_send, server_address_send, sender_id)
+            else:
+                # Player hit another player, transmit the hit player's equipment ID
+                transmit_data(sock_send, server_address_send, hit_id)
+            
 
     # Send data
     # logic to decide what data to send
