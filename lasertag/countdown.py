@@ -1,6 +1,8 @@
 import os
 import tkinter as tk
 from PIL import Image, ImageTk
+import pygame
+
 
 def main():
     root = tk.Tk()
@@ -28,6 +30,11 @@ def main():
         image_label.image = photo
         root.after(1000, show_next_image, index - 1)
 
+    def start_music():
+        pygame.mixer.init()
+        pygame.mixer.music.load("sounds/Track07.mp3")
+        pygame.mixer.music.play()
+
     # Start countdown 
     show_next_image(30)
 
@@ -35,6 +42,9 @@ def main():
     def skip_countdown(event):
         root.destroy()
     root.bind("<space>", skip_countdown)
+
+
+    root.after(16000, start_music)
 
     root.mainloop()
 

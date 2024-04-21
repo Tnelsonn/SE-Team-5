@@ -17,7 +17,7 @@ def create_sockets():
 
 def bind_sockets():
     sock_receive.bind(server_address_receive)
-    sock_send.bind(server_address_send) 
+    #sock_send.bind(server_address_send) 
 
 def receive_data():
     while True:

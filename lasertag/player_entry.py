@@ -33,12 +33,11 @@ def load_db():
         player_hid =  player.get('hardware_id', '')
         player_codename = player.get('codename', '')
         if int(player_hid.strip())%2 == 1:
-            green_team.append(player)
-            green_team_cn.append(player_codename.strip())
-        else:
             red_team.append(player)
             red_team_cn.append(player_codename.strip())
-
+        else:
+            green_team.append(player)
+            green_team_cn.append(player_codename.strip())
 def fill_tables():
     #load current db
     load_db()    
