@@ -9,6 +9,8 @@ import socket
 sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_address_send = ('localhost', 7500)
 
+score_labels = {}
+
 def game_end(socket, address):
     for _ in range(3):
         socket.sendto(b'221', address)
@@ -45,11 +47,15 @@ def create_game_screen(green_team,red_team):
     # Add player names to green team box
     for idx, player_name in enumerate(green_team):
         tk.Label(team1_interior, text=player_name, bg="black", fg="white").grid(row=idx, column=0, padx=5, pady=5)
-
+        score_label = tk.Label(team1_interior, text="0", bg="black", fg="white")
+        score_label.grid(row=idx, column=1, padx=5, pady=5)
+        score_labels[player_name] = score_label
     # Add player names to red team box
     for idx, player_name in enumerate(red_team):
         tk.Label(team2_interior, text=player_name, bg="black", fg="white").grid(row=idx, column=0, padx=5, pady=5)
-
+        score_label = tk.Label(team2_interior, text="0", bg="black", fg="white")
+        score_label.grid(row=idx, column=1, padx=5, pady=5)
+        score_labels[player_name] = score_label
 
 
     # Create frame for current game action
