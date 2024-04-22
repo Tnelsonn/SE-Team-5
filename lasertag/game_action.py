@@ -12,6 +12,7 @@ server_address_send = ('localhost', 7500)
 
 update_count = 0
 
+
 def game_end(socket, address):
     for _ in range(3):
         socket.sendto(b'221', address)
@@ -44,8 +45,26 @@ def create_game_screen(green_team,red_team,hid):
     team2_interior.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.9)
 
     # Add labels for team names
-    tk.Label(game_screen, text="Green Team - SCORE: 0", bg="black", fg="green").place(x=10, y=10)
-    tk.Label(game_screen, text="Red Team - SCORE: 0", bg="black", fg="red").place(x=width//2+10, y=10)
+    
+        
+    # Create labels for green and red team scores
+    green_label = tk.Label(game_screen, text="Green Team - SCORE: 0", bg="black", fg="green")
+    green_label.place(x=10, y=10)
+
+    red_label = tk.Label(game_screen, text="Red Team - SCORE: 0", bg="black", fg="red")
+    red_label.place(x=width//2+10, y=10)
+
+    def update_scores():
+        # Update the text of the green and red labels with the current scores
+        green_label.config(text=f"Green Team - SCORE: {scoreboard.green_score}")
+        red_label.config(text=f"Red Team - SCORE: {scoreboard.red_score}")
+        
+        # Schedule the function to run again after a certain delay
+        game_screen.after(10, update_scores)
+
+    # Start updating the scores
+    update_scores()
+    
 
     # Add player names to green team box
     for idx, player_name in enumerate(green_team):
@@ -55,23 +74,7 @@ def create_game_screen(green_team,red_team,hid):
     # Add player names to red team box
     for idx, player_name in enumerate(red_team):
         tk.Label(team2_interior, text=player_name, bg="black", fg="white").grid(row=idx, column=0, padx=5, pady=5)
-    def update_scores():
-        global update_c
-        if update_c < max_updates:
-            print(scoreboard.board)
-            # Update the text of the current label
-            action_labels[update_count % len(action_labels)].config(text=scoreboard.board)
-            label_texts[update_count % len(action_labels)] = scoreboard.board
-            update_count += 1
-            # Schedule the function to run again after a certain delay
-            game_screen.after(10, update_scores)
-        else:
-            # Update the labels based on the text of the label in front of it
-            for i in range(len(action_labels) - 1, 0, -1):
-                label_texts[i] = label_texts[i - 1]  # Move text forward
-                action_labels[i].config(text=label_texts[i])  # Update label text
-            action_labels[0].config(text="")  # Make the first label blank
-        update_scores()
+    
 
 
     # Create frame for current game action
