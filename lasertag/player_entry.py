@@ -6,10 +6,15 @@ import udp_sockets
 import database as db
 from game_action import create_game_screen
 from countdown import main
+import threading
 
-#get socket information
+#create sockets
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
+udp_sockets.bind_sockets()
 
+#create thread for receiving statuses
+socket_thread = threading.Thread(target=udp_sockets.receive_data)
+socket_thread.start()
 
 #lists of player info for each team
 green_team = []

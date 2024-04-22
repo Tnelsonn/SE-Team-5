@@ -73,24 +73,30 @@ def create_game_screen(green_team,red_team):
         action_labels.append(label)
 
     max_updates = 10  # Define the maximum number of updates
-    update_count = 0
+    label_texts = [""] * len(action_labels)  # Store the text of each label
 
+    
     # Define function to update action
     def update_action():
         global update_count
         if update_count < max_updates:
+            print(scoreboard.board)
             # Update the text of the current label
             action_labels[update_count % len(action_labels)].config(text=scoreboard.board)
+            label_texts[update_count % len(action_labels)] = scoreboard.board
             update_count += 1
             # Schedule the function to run again after a certain delay
             game_screen.after(1000, update_action)
         else:
-            # Update the text of all labels to indicate maximum updates reached
-            action_labels[max_updates].config(text="")
-
+            # Update the labels based on the text of the label in front of it
+            for i in range(len(action_labels) - 1, 0, -1):
+                label_texts[i] = label_texts[i - 1]  # Move text forward
+                action_labels[i].config(text=label_texts[i])  # Update label text
+            action_labels[0].config(text="")  # Make the first label blank
 
     # Call the update_action function to start the update process
     update_action()
+
 
 
     game_screen.mainloop()

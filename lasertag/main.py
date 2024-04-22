@@ -6,16 +6,8 @@ import time
 from tkinter import * 
 from PIL import Image, ImageTk
 from tkinter.ttk import Progressbar
-import udp_sockets
+import player_entry
 import threading
-
-#create sockets
-sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
-udp_sockets.bind_sockets()
-
-#create thread for receiving statuses
-socket_thread = threading.Thread(target=udp_sockets.receive_data)
-socket_thread.start()
 
 # creating an instance of a TK object named splash for the first display case
 splash = Tk(className='Loading')
