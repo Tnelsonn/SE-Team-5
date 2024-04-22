@@ -10,6 +10,8 @@ from database import clear_table
 #get socket information
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
 
+
+
 def process_receive_data():
     while True:
         # Receive data
@@ -17,10 +19,14 @@ def process_receive_data():
 
         print('Received:', data.decode())
 
+        sender_id, hit_id = data.decode().split(':')
+
+        # Update GUI with sender ID and hit ID
+        update_action_label("topher")
+    
         # Process received data
         if b':' in data:
             # Player hit another player
-            sender_id, hit_id = data.decode().split(':')
             if hit_id == 53:
                 #Red base score
                 pass
@@ -34,8 +40,15 @@ def process_receive_data():
                 # Player hit another player, transmit the hit player's equipment ID
                 udp_sockets.transmit_data(sock_send, server_address_send, hit_id)
 
+def update_action_label(sender_id, hit_id):
+    # Update label with sender ID and hit ID
+    if sender_id is not None and hit_id is not None:
+        action_label.config(text=str(f"Sender ID: {sender_id}, Hit ID: {hit_id}"))
 
-def create_game_screen(green_team,red_team,hid):
+def create_game_screen(green_team,red_team):
+    
+    global action_label
+    
     game_screen = tk.Tk()
     game_screen.title("Game Action Screen")
     width = 1280
@@ -78,6 +91,9 @@ def create_game_screen(green_team,red_team,hid):
 
     # Add label for current game action
     tk.Label(current_action_frame, text="Current Game Action", bg="black", fg="blue").pack()
+
+    action_label = tk.Label(current_action_frame, text="", bg="black", fg="white")
+    action_label.pack()
 
     game_screen.after(360000,udp_sockets.game_end,sock_send, server_address_send)
 

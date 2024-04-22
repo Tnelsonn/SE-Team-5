@@ -34,29 +34,6 @@ def receive_data():
         # Put received data into the queue
         received_data_queue.put((data, address))
 
-def process_receive_data():
-    while True:
-        # Receive data
-        data, address = received_data_queue.get()
-
-        print('Received:', data.decode())
-
-        # Process received data
-        if b':' in data:
-            # Player hit another player
-            sender_id, hit_id = data.decode().split(':')
-            if hit_id == 53:
-                #Red base score
-                pass
-            elif hit_id == 43:
-                #Green base scored
-                pass
-            elif sender_id == hit_id:
-                # Player tagged themselves, transmit their own equipment ID
-                transmit_data(sock_send, server_address_send, sender_id)
-            else:
-                # Player hit another player, transmit the hit player's equipment ID
-                transmit_data(sock_send, server_address_send, hit_id)
             
 
     # Send data
