@@ -19,6 +19,8 @@ red_team = []
 green_team_cn = []
 red_team_cn = []
 
+ghid = []
+rhid = []
 
 def load_db():
     #get all current rows in the db
@@ -35,9 +37,12 @@ def load_db():
         if int(player_hid.strip())%2 == 1:
             red_team.append(player)
             red_team_cn.append(player_codename.strip())
+            rhid.append(player_hid.strip())
         else:
             green_team.append(player)
             green_team_cn.append(player_codename.strip())
+            ghid.append(player_hid.strip())
+
 def fill_tables():
     #load current db
     load_db()    

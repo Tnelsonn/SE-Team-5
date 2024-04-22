@@ -3,12 +3,39 @@ import time
 import tkinter as tk
 import udp_sockets
 import database
+import queue
+import threading
 from database import clear_table
 
 #get socket information
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
 
-def create_game_screen(green_team,red_team):
+def process_receive_data():
+    while True:
+        # Receive data
+        data, address = udp_sockets.received_data_queue.get()
+
+        print('Received:', data.decode())
+
+        # Process received data
+        if b':' in data:
+            # Player hit another player
+            sender_id, hit_id = data.decode().split(':')
+            if hit_id == 53:
+                #Red base score
+                pass
+            elif hit_id == 43:
+                #Green base scored
+                pass
+            elif sender_id == hit_id:
+                # Player tagged themselves, transmit their own equipment ID
+                udp_sockets.transmit_data(sock_send, server_address_send, sender_id)
+            else:
+                # Player hit another player, transmit the hit player's equipment ID
+                udp_sockets.transmit_data(sock_send, server_address_send, hit_id)
+
+
+def create_game_screen(green_team,red_team,hid):
     game_screen = tk.Tk()
     game_screen.title("Game Action Screen")
     width = 1280
