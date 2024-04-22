@@ -33,16 +33,22 @@ def receive_data():
             sender_id, hit_id = data.decode().split(':')
             if hit_id == 53:
                 #Red base score
+                scoreboard.add_score(sender_id, 100)
                 transmit_data(sock_send, server_address_send, 100)
+                
             elif hit_id == 43:
                 #Green base scored
+                scoreboard.add_score(sender_id, 100)
                 transmit_data(sock_send, server_address_send, 100)
+                
             elif sender_id == hit_id:
                 # Player tagged themselves, transmit their own equipment ID
+                scoreboard.add_score(sender_id, -10)
                 transmit_data(sock_send, server_address_send, sender_id)
+                
             else:
                 # Player hit another player, transmit the hit player's equipment ID
-                scoreboard.add_score(sender_id, 1)
+                scoreboard.add_score(sender_id, 10)
                 transmit_data(sock_send, server_address_send, hit_id)
             
 
