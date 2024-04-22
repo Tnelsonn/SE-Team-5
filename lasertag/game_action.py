@@ -9,10 +9,13 @@ import socket
 sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_address_send = ('localhost', 7500)
 
+update_count = 0
+
 def game_end(socket, address):
     for _ in range(3):
         socket.sendto(b'221', address)
         print('Game end')
+
 
 def create_game_screen(green_team,red_team):
     game_screen = tk.Tk()
@@ -57,12 +60,37 @@ def create_game_screen(green_team,red_team):
     current_action_frame.place(x=240, y=height//2+50, width=800, height=250)
 
     # Add label for current game action
+    # Add label for current game action
     tk.Label(current_action_frame, text="Current Game Action", bg="black", fg="blue").pack()
+    
+    # Create placeholders for values 
+    action_labels = []
+
+    # Create 10 labels and append them to the list
+    for i in range(10):
+        label = tk.Label(current_action_frame, text="", bg="black", fg="blue")
+        label.pack()
+        action_labels.append(label)
+
+    max_updates = 10  # Define the maximum number of updates
+    update_count = 0
+
+    # Define function to update action
+    def update_action():
+        global update_count
+        if update_count < max_updates:
+            # Update the text of the current label
+            action_labels[update_count % len(action_labels)].config(text=scoreboard.board)
+            update_count += 1
+            # Schedule the function to run again after a certain delay
+            game_screen.after(1000, update_action)
+        else:
+            # Update the text of all labels to indicate maximum updates reached
+            action_labels[max_updates].config(text="")
 
 
-    game_screen.after(5000,print,"board test")
-    game_screen.after(5000,print,scoreboard.board)
-    
-    
+    # Call the update_action function to start the update process
+    update_action()
+
 
     game_screen.mainloop()
