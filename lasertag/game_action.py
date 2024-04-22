@@ -4,6 +4,7 @@ import tkinter as tk
 import udp_sockets
 import database
 from database import clear_table
+import scoreboard
 
 #get socket information
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
@@ -52,6 +53,10 @@ def create_game_screen(green_team,red_team):
     # Add label for current game action
     tk.Label(current_action_frame, text="Current Game Action", bg="black", fg="blue").pack()
 
+
+    game_screen.after(5000,print,"board test")
+    game_screen.after(5000,print,scoreboard.board)
+    
     game_screen.after(360000,udp_sockets.game_end,sock_send, server_address_send)
 
     game_screen.mainloop()

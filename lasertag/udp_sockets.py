@@ -1,4 +1,5 @@
 import socket
+import scoreboard
 
 def create_sockets():
     global sock_send, sock_receive, server_address_send, server_address_receive
@@ -41,6 +42,7 @@ def receive_data():
                 transmit_data(sock_send, server_address_send, sender_id)
             else:
                 # Player hit another player, transmit the hit player's equipment ID
+                scoreboard.add_score(sender_id, 1)
                 transmit_data(sock_send, server_address_send, hit_id)
             
 

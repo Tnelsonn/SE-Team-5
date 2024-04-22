@@ -32,8 +32,8 @@ def main():
 
     def start_music():
         pygame.mixer.init()
-        pygame.mixer.music.load("sounds/Track07.mp3")
-        pygame.mixer.music.play()
+        # pygame.mixer.music.load("sounds/Track07.mp3")
+        # pygame.mixer.music.play()
 
     # Start countdown 
     show_next_image(30)
