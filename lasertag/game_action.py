@@ -13,13 +13,15 @@ server_address_send = ('localhost', 7500)
 update_count = 0
 
 
+
+
 def game_end(socket, address):
     for _ in range(3):
         socket.sendto(b'221', address)
         print('Game end')
 
 
-def create_game_screen(green_team,red_team,hid):
+def create_game_screen(green_team,red_team,hid,player_hid_data):
     game_screen = tk.Tk()
     game_screen.after(360000,game_end,sock_send, server_address_send)
     game_screen.title("Game Action Screen")
@@ -46,7 +48,7 @@ def create_game_screen(green_team,red_team,hid):
 
     # Add labels for team names
     
-        
+       
     # Create labels for green and red team scores
     green_label = tk.Label(game_screen, text="Green Team - SCORE: 0", bg="black", fg="green")
     green_label.place(x=10, y=10)
@@ -54,28 +56,81 @@ def create_game_screen(green_team,red_team,hid):
     red_label = tk.Label(game_screen, text="Red Team - SCORE: 0", bg="black", fg="red")
     red_label.place(x=width//2+10, y=10)
 
-    def update_scores():
-        # Update the text of the green and red labels with the current scores
-        green_label.config(text=f"Green Team - SCORE: {scoreboard.green_score}")
-        red_label.config(text=f"Red Team - SCORE: {scoreboard.red_score}")
-        
-        # Schedule the function to run again after a certain delay
-        game_screen.after(10, update_scores)
+    def flash_label(label):
+        def flash():
+            # Define colors to alternate between
+            colors = ["black", "white"]
 
-    # Start updating the scores
-    update_scores()
+            # Alternate between colors
+            for color in colors:
+                label.config(fg=color)
+                game_screen.update()  # Update the display
+                game_screen.after(500)  # Wait for 500 milliseconds before changing color
+
+        # Start flashing
+        flash()
     
+    def flash_highest_scorer(green_scores, red_scores):
+        # Combine green and red scores
+        all_scores = green_scores + red_scores
 
-    # Add player names to green team box
+        # Find the player with the highest score
+        highest_scorer = max(all_scores, key=lambda x: x[1])
+
+        # Determine the team of the highest scorer
+        if highest_scorer in green_scores:
+            team_labels = green_labels
+        else:
+            team_labels = red_labels
+
+        # Find the label associated with the highest scorer
+        for label in team_labels:
+            player_name = label.cget("text").split(" - ")[0]  # Get the player name from the label text
+            if player_name == highest_scorer[0]:
+                flash_label(label)  # Flash the label of the highest scorer
+                break
+
+    def update_player_scores():
+        while True:
+            # Update label texts for green team players
+            green_scores = [(player_name, scoreboard.board.get(player_hid_data.get(player_name, ""), 0)) for player_name in green_team]
+            green_scores.sort(key=lambda x: x[1], reverse=True)  # Sort players based on scores
+            for idx, (player_name, score) in enumerate(green_scores):
+                hid = player_hid_data.get(player_name, "")    
+                label_text = f"{player_name} - Score: {score}"
+                green_labels[idx].config(text=label_text)
+                
+
+            # Update label texts for red team players
+            red_scores = [(player_name, scoreboard.board.get(player_hid_data.get(player_name, ""), 0)) for player_name in red_team]
+            red_scores.sort(key=lambda x: x[1], reverse=True)  # Sort players based on scores
+            for idx, (player_name, score) in enumerate(red_scores):
+                hid = player_hid_data.get(player_name, "")    
+                label_text = f"{player_name} - Score: {score}"
+                red_labels[idx].config(text=label_text)
+
+            flash_highest_scorer(green_scores, red_scores)
+
+            green_label.config(text=f"Green Team - SCORE: {scoreboard.green_score}")
+            red_label.config(text=f"Red Team - SCORE: {scoreboard.red_score}")
+
+            time.sleep(0.5)
+
+
+    green_labels = []
     for idx, player_name in enumerate(green_team):
+        label = tk.Label(team1_interior, text=f"{player_name} - Score: 0", bg="black", fg="white")
+        label.grid(row=idx, column=0, padx=5, pady=5)
+        green_labels.append(label)
 
-        tk.Label(team1_interior, text=player_name, bg="black", fg="white").grid(row=idx, column=0, padx=5, pady=5)
-
-    # Add player names to red team box
+    # Create labels for each player in the red team
+    red_labels = []
     for idx, player_name in enumerate(red_team):
-        tk.Label(team2_interior, text=player_name, bg="black", fg="white").grid(row=idx, column=0, padx=5, pady=5)
-    
+        label = tk.Label(team2_interior, text=f"{player_name} - Score: 0", bg="black", fg="white")
+        label.grid(row=idx, column=1, padx=5, pady=5)
+        red_labels.append(label)
 
+    
 
     # Create frame for current game action
     current_action_frame = tk.Frame(game_screen, bg="black", bd=2, relief="ridge")
@@ -123,7 +178,9 @@ def create_game_screen(green_team,red_team,hid):
             # Sleep for a short interval before checking for updates again
             time.sleep(0.5)
     
-
+    update_player_thread = threading.Thread(target=update_player_scores)
+    update_player_thread.daemon = True  # Set the thread as a daemon so it will exit when the main program exits
+    update_player_thread.start()
     update_thread = threading.Thread(target=update_action)
     update_thread.daemon = True  # Set the thread as a daemon so it will exit when the main program exits
     update_thread.start()

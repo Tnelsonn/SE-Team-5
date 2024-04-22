@@ -34,22 +34,22 @@ def receive_data():
             if int(hit_id) == 53:
                 #Red base score
                 scoreboard.add_player_hits(sender_id,hit_id,100)
-                scoreboard.add_score(sender_id, 100)
+                scoreboard.add_score(int(sender_id), 100)
                 transmit_data(sock_send, server_address_send, 100)
             elif int(hit_id) == 43:
                 #Green base scored
-                scoreboard.add_score(sender_id, 100)
+                scoreboard.add_score(int(sender_id), 100)
                 scoreboard.add_player_hits(sender_id,hit_id,100)
                 transmit_data(sock_send, server_address_send, 100)
             elif int(sender_id) % 2 == int(hit_id) % 2:
                 # Player tagged themselves, transmit their own equipment ID
                 scoreboard.add_player_hits(sender_id,hit_id,-10)
-                scoreboard.add_score(sender_id, -10)
+                scoreboard.add_score(int(sender_id), -10)
                 transmit_data(sock_send, server_address_send, sender_id)
             else:
                 # Player hit another player, transmit the hit player's equipment ID
                 scoreboard.add_player_hits(sender_id,hit_id,10)
-                scoreboard.add_score(sender_id, 10)
+                scoreboard.add_score(int(sender_id), 10)
                 transmit_data(sock_send, server_address_send, hit_id)
             
 

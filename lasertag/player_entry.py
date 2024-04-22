@@ -24,6 +24,7 @@ red_team = []
 green_team_cn = []
 red_team_cn = []
 hid = []
+player_hid_data = dict()
 hid.append(("Red Base",53))
 hid.append(("Green Base",43))
 
@@ -40,6 +41,7 @@ def load_db():
         player_hid =  player.get('hardware_id', '')
         player_codename = player.get('codename', '')
         hid.append((player_codename.strip(),int(player_hid.strip())))
+        player_hid_data[player_codename.strip()]=int(player_hid.strip())
         if int(player_hid.strip())%2 == 0:
             green_team.append(player)
             green_team_cn.append(player_codename.strip())
@@ -126,7 +128,7 @@ def switch_to_game_screen(event=None):
     if __name__ == "__main__":
         main()
     udp_sockets.game_start(sock_send, server_address_send)
-    create_game_screen(green_team_cn, red_team_cn,hid)
+    create_game_screen(green_team_cn, red_team_cn,hid,player_hid_data)
     
 
 p_entry = tk.Tk()
