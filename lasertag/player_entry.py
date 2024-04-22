@@ -125,12 +125,13 @@ def clear_entries(event=None):
 
 def switch_to_game_screen(event=None):
     p_entry.destroy()
+    #os.system("Python3 tg.py")
     if __name__ == "__main__":
         main()
     udp_sockets.game_start(sock_send, server_address_send)
     create_game_screen(green_team_cn, red_team_cn,hid,player_hid_data)
     
-
+    
 p_entry = tk.Tk()
 p_entry.title("Player Entry")
 width = 1280

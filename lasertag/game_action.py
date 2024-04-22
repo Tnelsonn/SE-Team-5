@@ -6,6 +6,7 @@ from database import clear_table
 import scoreboard
 import socket
 import threading
+import player_entry
 
 sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_address_send = ('localhost', 7500)
@@ -32,7 +33,21 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
     game_screen.geometry('{}x{}+{}+{}'.format(width,height,x,y))
     game_screen.configure(background = 'black')
 
-    
+    def update_timer():
+        remaining_time = 360  # 6 minutes in seconds
+        while remaining_time >= 0:
+            minutes = remaining_time // 60
+            seconds = remaining_time % 60
+            timer_label.config(text=f"Time Remaining: {minutes:02d}:{seconds:02d}")
+            time.sleep(1)
+            remaining_time -= 1
+        timer_label.config(text="Time's up!")
+
+
+    # Create the timer label and place it in the bottom left
+    timer_label = tk.Label(game_screen, text="Time Remaining: 06:00", bg="black", fg="white", font='Helvetica 18 bold')
+    timer_label.place(x=10, y=height - 30)
+
    # Create frames for each team
     team1_outline = tk.Frame(game_screen, bg="green", bd=2, relief="ridge")
     team1_outline.place(x=10, y=40, width=width//2-20, height= height//2)
@@ -203,10 +218,25 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
             # Sleep for a short interval before checking for updates again
             time.sleep(0.5)
     
+
+    def end_game():
+        #game_screen.withdraw()
+        game_screen.destroy()
+        os.system("Python3 player_entry.py")
+
+    end_game_button = tk.Button(game_screen, text="End Game", command=end_game)
+    end_game_button.place(x=width - 150, y=height - 50, width=100, height=30)
+
+
     update_player_thread = threading.Thread(target=update_player_scores)
     update_player_thread.daemon = True  # Set the thread as a daemon so it will exit when the main program exits
     update_player_thread.start()
     update_thread = threading.Thread(target=update_action)
     update_thread.daemon = True  # Set the thread as a daemon so it will exit when the main program exits
     update_thread.start()
+
+    timer_thread = threading.Thread(target=update_timer)
+    timer_thread.daemon = True
+    timer_thread.start()
+
     game_screen.mainloop()
