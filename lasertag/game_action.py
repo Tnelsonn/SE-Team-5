@@ -5,6 +5,7 @@ import database
 from database import clear_table
 import scoreboard
 import socket
+import threading
 
 sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_address_send = ('localhost', 7500)
@@ -17,7 +18,7 @@ def game_end(socket, address):
         print('Game end')
 
 
-def create_game_screen(green_team,red_team):
+def create_game_screen(green_team,red_team,hid):
     game_screen = tk.Tk()
     game_screen.after(360000,game_end,sock_send, server_address_send)
     game_screen.title("Game Action Screen")
@@ -28,6 +29,7 @@ def create_game_screen(green_team,red_team):
     game_screen.geometry('{}x{}+{}+{}'.format(width,height,x,y))
     game_screen.configure(background = 'black')
 
+    
    # Create frames for each team
     team1_outline = tk.Frame(game_screen, bg="green", bd=2, relief="ridge")
     team1_outline.place(x=10, y=40, width=width//2-20, height= height//2)
@@ -42,17 +44,34 @@ def create_game_screen(green_team,red_team):
     team2_interior.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.9)
 
     # Add labels for team names
-    tk.Label(game_screen, text="Green Team", bg="black", fg="green").place(x=10, y=10)
-    tk.Label(game_screen, text="Red Team", bg="black", fg="red").place(x=width//2+10, y=10)
+    tk.Label(game_screen, text="Green Team - SCORE: 0", bg="black", fg="green").place(x=10, y=10)
+    tk.Label(game_screen, text="Red Team - SCORE: 0", bg="black", fg="red").place(x=width//2+10, y=10)
 
     # Add player names to green team box
     for idx, player_name in enumerate(green_team):
+
         tk.Label(team1_interior, text=player_name, bg="black", fg="white").grid(row=idx, column=0, padx=5, pady=5)
 
     # Add player names to red team box
     for idx, player_name in enumerate(red_team):
         tk.Label(team2_interior, text=player_name, bg="black", fg="white").grid(row=idx, column=0, padx=5, pady=5)
-
+    def update_scores():
+        global update_c
+        if update_c < max_updates:
+            print(scoreboard.board)
+            # Update the text of the current label
+            action_labels[update_count % len(action_labels)].config(text=scoreboard.board)
+            label_texts[update_count % len(action_labels)] = scoreboard.board
+            update_count += 1
+            # Schedule the function to run again after a certain delay
+            game_screen.after(10, update_scores)
+        else:
+            # Update the labels based on the text of the label in front of it
+            for i in range(len(action_labels) - 1, 0, -1):
+                label_texts[i] = label_texts[i - 1]  # Move text forward
+                action_labels[i].config(text=label_texts[i])  # Update label text
+            action_labels[0].config(text="")  # Make the first label blank
+        update_scores()
 
 
     # Create frame for current game action
@@ -65,7 +84,7 @@ def create_game_screen(green_team,red_team):
     
     # Create placeholders for values 
     action_labels = []
-
+    
     # Create 10 labels and append them to the list
     for i in range(10):
         label = tk.Label(current_action_frame, text="", bg="black", fg="blue")
@@ -79,24 +98,30 @@ def create_game_screen(green_team,red_team):
     # Define function to update action
     def update_action():
         global update_count
-        if update_count < max_updates:
-            print(scoreboard.board)
-            # Update the text of the current label
-            action_labels[update_count % len(action_labels)].config(text=scoreboard.board)
-            label_texts[update_count % len(action_labels)] = scoreboard.board
-            update_count += 1
-            # Schedule the function to run again after a certain delay
-            game_screen.after(1000, update_action)
-        else:
-            # Update the labels based on the text of the label in front of it
-            for i in range(len(action_labels) - 1, 0, -1):
-                label_texts[i] = label_texts[i - 1]  # Move text forward
-                action_labels[i].config(text=label_texts[i])  # Update label text
-            action_labels[0].config(text="")  # Make the first label blank
+        while True:
+            current_length = len(scoreboard.player_hits)
+            start_index = max(current_length - 10, 0)  # Start index for the last 10 entries
+            
+            # Update the labels with the last 10 entries of scoreboard.player_hits
+            for i in range(min(10, current_length)):
+                sender, hit, points = scoreboard.player_hits[start_index + i]
+            
+                # Find the sender's name corresponding to the ID
+                sender_name = next((name for name, id in hid if int(id) == int(sender)), "Unknown")
+            
+                # Find the hit player's name corresponding to the ID
+                hit_name = next((name for name, id in hid if int(id) == int(hit)), "Unknown")
+                text = f"{sender_name} hit {hit_name}: {points} points"
+                action_labels[i].config(text = text)
+            # Make the remaining labels blank
+            for i in range(min(10, current_length), 10):
+                action_labels[i].config(text="")
+            
+            # Sleep for a short interval before checking for updates again
+            time.sleep(0.5)
+    
 
-    # Call the update_action function to start the update process
-    update_action()
-
-
-
+    update_thread = threading.Thread(target=update_action)
+    update_thread.daemon = True  # Set the thread as a daemon so it will exit when the main program exits
+    update_thread.start()
     game_screen.mainloop()
