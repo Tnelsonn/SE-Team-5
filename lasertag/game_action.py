@@ -1,16 +1,22 @@
 import os
 import time
 import tkinter as tk
-import udp_sockets
 import database
 from database import clear_table
 import scoreboard
+import socket
 
-#get socket information
-sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
+sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_address_send = ('localhost', 7500)
+
+def game_end(socket, address):
+    for _ in range(3):
+        socket.sendto(b'221', address)
+        print('Game end')
 
 def create_game_screen(green_team,red_team):
     game_screen = tk.Tk()
+    game_screen.after(360000,game_end,sock_send, server_address_send)
     game_screen.title("Game Action Screen")
     width = 1280
     height = 720
@@ -57,6 +63,6 @@ def create_game_screen(green_team,red_team):
     game_screen.after(5000,print,"board test")
     game_screen.after(5000,print,scoreboard.board)
     
-    game_screen.after(360000,udp_sockets.game_end,sock_send, server_address_send)
+    
 
     game_screen.mainloop()
