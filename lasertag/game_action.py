@@ -50,11 +50,36 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
     
        
     # Create labels for green and red team scores
-    green_label = tk.Label(game_screen, text="Green Team - SCORE: 0", bg="black", fg="green")
+    green_label = tk.Label(game_screen, text="Green Team - SCORE: 0", bg="black", fg="white",font='Helvetica 18 bold')
     green_label.place(x=10, y=10)
 
-    red_label = tk.Label(game_screen, text="Red Team - SCORE: 0", bg="black", fg="red")
+    red_label = tk.Label(game_screen, text="Red Team - SCORE: 0", bg="black", fg="white",font='Helvetica 18 bold')
     red_label.place(x=width//2+10, y=10)
+
+    def flash_team_labels():
+        def flash(label):
+            # Define colors to alternate between
+            colors = ["black", "white"]
+            # Alternate between colors
+            for color in colors:
+                label.config(fg=color)
+                game_screen.update()
+                game_screen.after(500)  
+
+        # Get the current scores
+        green_score = scoreboard.green_score
+        red_score = scoreboard.red_score
+
+        # Determine which team has a higher score
+        if green_score > red_score:
+            flash(green_label)  # Flash the green team label
+        elif red_score > green_score:
+            flash(red_label)    # Flash the red team label
+        else:
+            # In case of a tie, flash both labels
+            flash(green_label)
+            flash(red_label)
+
 
     def flash_label(label):
         def flash():
@@ -110,7 +135,7 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
                 red_labels[idx].config(text=label_text)
 
             flash_highest_scorer(green_scores, red_scores)
-
+            flash_team_labels()
             green_label.config(text=f"Green Team - SCORE: {scoreboard.green_score}")
             red_label.config(text=f"Red Team - SCORE: {scoreboard.red_score}")
 
@@ -119,14 +144,14 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
 
     green_labels = []
     for idx, player_name in enumerate(green_team):
-        label = tk.Label(team1_interior, text=f"{player_name} - Score: 0", bg="black", fg="white")
+        label = tk.Label(team1_interior, text=f"{player_name} - Score: 0", bg="black", fg="white",font='Helvetica 18 bold')
         label.grid(row=idx, column=0, padx=5, pady=5)
         green_labels.append(label)
 
     # Create labels for each player in the red team
     red_labels = []
     for idx, player_name in enumerate(red_team):
-        label = tk.Label(team2_interior, text=f"{player_name} - Score: 0", bg="black", fg="white")
+        label = tk.Label(team2_interior, text=f"{player_name} - Score: 0", bg="black", fg="white",font='Helvetica 18 bold')
         label.grid(row=idx, column=1, padx=5, pady=5)
         red_labels.append(label)
 
@@ -138,14 +163,14 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
 
     # Add label for current game action
     # Add label for current game action
-    tk.Label(current_action_frame, text="Current Game Action", bg="black", fg="blue").pack()
+    tk.Label(current_action_frame, text="Current Game Action", bg="black", fg="blue",font='Helvetica 18 bold').pack()
     
     # Create placeholders for values 
     action_labels = []
     
     # Create 10 labels and append them to the list
     for i in range(10):
-        label = tk.Label(current_action_frame, text="", bg="black", fg="blue")
+        label = tk.Label(current_action_frame, text="", bg="black", fg="blue",font='Helvetica 18 bold')
         label.pack()
         action_labels.append(label)
 
