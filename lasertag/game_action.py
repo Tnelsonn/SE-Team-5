@@ -1,4 +1,5 @@
 import os
+import subprocess
 import time
 import tkinter as tk
 import database
@@ -6,6 +7,7 @@ from database import clear_table
 import scoreboard
 import socket
 import threading
+import udp_sockets
 
 sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_address_send = ('localhost', 7500)
@@ -202,6 +204,25 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
             
             # Sleep for a short interval before checking for updates again
             time.sleep(0.5)
+
+    def go_back_to_player_entry():
+        # Close the socket
+        game_screen.destroy()  # Close the current game screen
+        udp_sockets.cleanup()
+        udp_sockets.stop_receive_thread()
+       
+            
+            # Open the player entry screen
+        status = os.system("python3 player_entry.py")
+        print(status)
+        
+       
+
+
+    # Create a button to go back to the player entry screen
+    back_button = tk.Button(game_screen, text="Back to Player Entry", command=go_back_to_player_entry)
+    back_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 30)
+
     
     update_player_thread = threading.Thread(target=update_player_scores)
     update_player_thread.daemon = True  # Set the thread as a daemon so it will exit when the main program exits
