@@ -6,10 +6,15 @@ import udp_sockets
 import database as db
 from game_action import create_game_screen
 from countdown import main
+import threading
 
-#get socket information
+#create sockets
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
+udp_sockets.bind_sockets()
 
+#create thread for receiving statuses
+socket_thread = threading.Thread(target=udp_sockets.receive_data)
+socket_thread.start()
 
 #lists of player info for each team
 green_team = []
@@ -18,7 +23,10 @@ red_team = []
 #lists of only codenames for each team
 green_team_cn = []
 red_team_cn = []
-
+hid = []
+player_hid_data = dict()
+hid.append(("Red Base",53))
+hid.append(("Green Base",43))
 
 def load_db():
     #get all current rows in the db
@@ -32,12 +40,17 @@ def load_db():
     for player in players:
         player_hid =  player.get('hardware_id', '')
         player_codename = player.get('codename', '')
-        if int(player_hid.strip())%2 == 1:
-            red_team.append(player)
-            red_team_cn.append(player_codename.strip())
-        else:
+        hid.append((player_codename.strip(),int(player_hid.strip())))
+        player_hid_data[player_codename.strip()]=int(player_hid.strip())
+        if int(player_hid.strip())%2 == 0:
             green_team.append(player)
             green_team_cn.append(player_codename.strip())
+            
+        else:
+            red_team.append(player)
+            red_team_cn.append(player_codename.strip())
+            
+            
 def fill_tables():
     #load current db
     load_db()    
@@ -112,12 +125,13 @@ def clear_entries(event=None):
 
 def switch_to_game_screen(event=None):
     p_entry.destroy()
+    #os.system("Python3 tg.py")
     if __name__ == "__main__":
         main()
     udp_sockets.game_start(sock_send, server_address_send)
-    create_game_screen(green_team_cn, red_team_cn)
+    create_game_screen(green_team_cn, red_team_cn,hid,player_hid_data)
     
-
+    
 p_entry = tk.Tk()
 p_entry.title("Player Entry")
 width = 1280
