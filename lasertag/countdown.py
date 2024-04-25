@@ -29,7 +29,7 @@ def main():
     image_label = tk.Label(root, image=first_photo)
     image_label.pack(expand=True, fill='both')
     tracks = ["Track01.mp3", "Track02.mp3", "Track03.mp3", "Track04.mp3", "Track06.mp3", "Track07.mp3"]
-    random_track = random.choice(tracks)
+    
     # Display Next images
     def show_next_image(index):
         if index < 0:
@@ -46,7 +46,8 @@ def main():
 
     def start_music():
         pygame.mixer.init()
-        pygame.mixer.music.load("sounds/{random_track}")
+        random_track = random.choice(tracks)
+        pygame.mixer.music.load(f"sounds/{random_track}")
         pygame.mixer.music.play()
 
 
