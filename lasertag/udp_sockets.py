@@ -1,5 +1,5 @@
 import socket
-import lasertag.scoreboard as scoreboard
+import scoreboard
 import threading
 import time
 
