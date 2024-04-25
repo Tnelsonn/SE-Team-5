@@ -8,8 +8,11 @@ from game_action import create_game_screen
 from countdown import main
 import threading
 
+
+
 #create sockets
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
+
 udp_sockets.bind_sockets()
 
 #create thread for receiving statuses
@@ -50,7 +53,7 @@ def load_db():
             red_team.append(player)
             red_team_cn.append(player_codename.strip())
             
-            
+          
 def fill_tables():
     #load current db
     load_db()    

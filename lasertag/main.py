@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 from tkinter.ttk import Progressbar
 import threading
 
+
 # creating an instance of a TK object named splash for the first display case
 splash = Tk(className='Loading')
 

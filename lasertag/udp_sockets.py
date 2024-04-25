@@ -82,7 +82,6 @@ def transmit_data(socket, address, id):
     print('Transmitting')
 
 def cleanup():
-    sock_send.close()
     sock_receive.close()
 
 def stop_receive_thread():
