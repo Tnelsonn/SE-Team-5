@@ -40,13 +40,13 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
     
    # Create frames for each team
     team1_outline = tk.Frame(game_screen, bg="green", bd=2, relief="ridge")
-    team1_outline.place(x=10, y=40, width=width//2-20, height= height//2)
+    team1_outline.place(x=10, y=45, width=width//2-20, height= height//2)
 
     team1_interior = tk.Frame(team1_outline, bg="black")
     team1_interior.place(relx=0.025, rely=0.05, relwidth=0.95, relheight=0.9)
 
     team2_outline = tk.Frame(game_screen, bg="red", bd=2, relief="ridge")
-    team2_outline.place(x=width//2+10, y=40, width=width//2-20, height= height//2)
+    team2_outline.place(x=width//2+10, y=45, width=width//2-20, height= height//2)
 
     team2_interior = tk.Frame(team2_outline, bg="black")
     team2_interior.place(relx=0.025, rely=0.05, relwidth=0.95, relheight=0.9)
