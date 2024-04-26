@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from PIL import Image, ImageTk
 import pygame
+import random
 
 
 def center_window(root, width, height):
@@ -27,8 +28,8 @@ def main():
     first_photo = ImageTk.PhotoImage(first_image)
     image_label = tk.Label(root, image=first_photo)
     image_label.pack(expand=True, fill='both')
-
-
+    tracks = ["Track01.mp3", "Track02.mp3", "Track03.mp3", "Track04.mp3", "Track06.mp3", "Track07.mp3"]
+    
     # Display Next images
     def show_next_image(index):
         if index < 0:
@@ -45,8 +46,14 @@ def main():
 
     def start_music():
         pygame.mixer.init()
+<<<<<<< HEAD
         # pygame.mixer.music.load("sounds/Track07.mp3")
         # pygame.mixer.music.play()
+=======
+        random_track = random.choice(tracks)
+        pygame.mixer.music.load(f"sounds/{random_track}")
+        pygame.mixer.music.play()
+>>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
 
 
     # Start countdown
@@ -69,6 +76,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-

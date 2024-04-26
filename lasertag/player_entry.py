@@ -8,10 +8,20 @@ from game_action import create_game_screen
 from countdown import main
 import threading
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
 #create sockets
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
 udp_sockets.bind_sockets()
 
+<<<<<<< HEAD
+=======
+udp_sockets.bind_sockets()
+
+>>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
 #create thread for receiving statuses
 socket_thread = threading.Thread(target=udp_sockets.receive_data)
 socket_thread.start()
@@ -50,7 +60,11 @@ def load_db():
             red_team.append(player)
             red_team_cn.append(player_codename.strip())
             
+<<<<<<< HEAD
             
+=======
+          
+>>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
 def fill_tables():
     #load current db
     load_db()    
@@ -130,7 +144,10 @@ def switch_to_game_screen(event=None):
         main()
     udp_sockets.game_start(sock_send, server_address_send)
     create_game_screen(green_team_cn, red_team_cn,hid,player_hid_data)
+<<<<<<< HEAD
     
+=======
+>>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
     
 p_entry = tk.Tk()
 p_entry.title("Player Entry")
