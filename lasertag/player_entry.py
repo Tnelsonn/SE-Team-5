@@ -12,7 +12,7 @@ import threading
 
 #create sockets
 sock_send, sock_receive, server_address_send, server_address_receive = udp_sockets.create_sockets()
-udp_sockets.bind_sockets()
+#udp_sockets.bind_sockets()
 
 udp_sockets.bind_sockets()
 
@@ -129,7 +129,6 @@ def clear_entries(event=None):
 
 def switch_to_game_screen(event=None):
     p_entry.destroy()
-    #os.system("Python3 tg.py")
     if __name__ == "__main__":
         main()
     udp_sockets.game_start(sock_send, server_address_send)
