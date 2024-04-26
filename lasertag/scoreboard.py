@@ -23,8 +23,4 @@ def team_scores(board):
         if int(id) % 2 == 0:
             green_score += int(board[id])
         else:
-<<<<<<< HEAD
             red_score += int(board[id])
-=======
-            red_score += int(board[id])
->>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745

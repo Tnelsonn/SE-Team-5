@@ -46,14 +46,9 @@ def main():
 
     def start_music():
         pygame.mixer.init()
-<<<<<<< HEAD
-        # pygame.mixer.music.load("sounds/Track07.mp3")
-        # pygame.mixer.music.play()
-=======
         random_track = random.choice(tracks)
         pygame.mixer.music.load(f"sounds/{random_track}")
         pygame.mixer.music.play()
->>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
 
 
     # Start countdown

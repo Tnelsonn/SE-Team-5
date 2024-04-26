@@ -25,11 +25,8 @@ def game_end(socket, address):
 
 
 def create_game_screen(green_team,red_team,hid,player_hid_data):
-<<<<<<< HEAD
-=======
     def show_back_button():
         back_button.pack(side=tk.BOTTOM, anchor=tk.CENTER, padx=10, pady=30)
->>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
     game_screen = tk.Tk()
     game_screen.after(360000,game_end,sock_send, server_address_send)
     game_screen.title("Game Action Screen")
@@ -124,17 +121,6 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
                 break
 
     def update_player_scores():
-<<<<<<< HEAD
-        while True:
-            # Update label texts for green team players
-            green_scores = [(player_name, scoreboard.board.get(player_hid_data.get(player_name, ""), 0)) for player_name in green_team]
-            green_scores.sort(key=lambda x: x[1], reverse=True)  # Sort players based on scores
-            for idx, (player_name, score) in enumerate(green_scores):
-                hid = player_hid_data.get(player_name, "")    
-                label_text = f"{player_name} - Score: {score}"
-                green_labels[idx].config(text=label_text)
-                
-=======
         previous_scores = {}
         while True:
             
@@ -147,25 +133,16 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
                     label_text += " B"  # Append 'B'
                 green_labels[idx].config(text=label_text)
                 previous_scores[player_name] = score
->>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
 
             # Update label texts for red team players
             red_scores = [(player_name, scoreboard.board.get(player_hid_data.get(player_name, ""), 0)) for player_name in red_team]
             red_scores.sort(key=lambda x: x[1], reverse=True)  # Sort players based on scores
-<<<<<<< HEAD
-            for idx, (player_name, score) in enumerate(red_scores):
-                hid = player_hid_data.get(player_name, "")    
-                label_text = f"{player_name} - Score: {score}"
-                red_labels[idx].config(text=label_text)
-
-=======
             for idx, (player_name, score) in enumerate(red_scores):   
                 label_text = f"{player_name} - Score: {score}"
                 if player_name in previous_scores and score - previous_scores[player_name] >= 100:
                     label_text += " B"  # Append 'B' to indicate score increased by 100 or more  
                 red_labels[idx].config(text=label_text)
                 previous_scores[player_name] = score
->>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
             flash_highest_scorer(green_scores, red_scores)
             flash_team_labels()
             green_label.config(text=f"Green Team - SCORE: {scoreboard.green_score}")
@@ -174,10 +151,6 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
             time.sleep(0.5)
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
     green_labels = []
     for idx, player_name in enumerate(green_team):
         label = tk.Label(team1_interior, text=f"{player_name} - Score: 0", bg="black", fg="white",font='Helvetica 18 bold')
@@ -244,22 +217,6 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
         game_screen.destroy()  # Close the current game screen
         udp_sockets.cleanup()
         udp_sockets.stop_receive_thread()
-<<<<<<< HEAD
-       
-            
-            # Open the player entry screen
-        status = os.system("python3 player_entry.py")
-        print(status)
-        
-       
-
-
-    # Create a button to go back to the player entry screen
-    back_button = tk.Button(game_screen, text="Back to Player Entry", command=go_back_to_player_entry)
-    back_button.pack(side = tk.BOTTOM , anchor = tk.CENTER, padx = 10, pady = 30)
-
-    
-=======
             # Open the player entry screen
         os.system("python3 player_entry.py")
         
@@ -291,15 +248,10 @@ def create_game_screen(green_team,red_team,hid,player_hid_data):
     timer_thread = threading.Thread(target=update_timer_display)
     timer_thread.daemon = True
     timer_thread.start()
->>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
     update_player_thread = threading.Thread(target=update_player_scores)
     update_player_thread.daemon = True  # Set the thread as a daemon so it will exit when the main program exits
     update_player_thread.start()
     update_thread = threading.Thread(target=update_action)
     update_thread.daemon = True  # Set the thread as a daemon so it will exit when the main program exits
     update_thread.start()
-<<<<<<< HEAD
     game_screen.mainloop()
-=======
-    game_screen.mainloop()
->>>>>>> 2d15881907dbb0a7b301063f40f5aedca37f8745
